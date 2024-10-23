@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app)  # Habilita o CORS para todas as rotas
 
 # Configurações do MongoDB
-client = MongoClient("mongodb://rodrigosrj:E38gsdWFxh18bBsT@cluster0.twhtu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = MongoClient("mongodb+srv://rodrigosrj:E38gsdWFxh18bBsT@cluster0.twhtu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client["meu_banco_de_dados"]
 collection = db["minha_colecao"]
 fs = gridfs.GridFS(db)
