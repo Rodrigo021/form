@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from pymongo import MongoClient
+from pymongo import MongoClient, errors
 from bson import ObjectId
 import gridfs
 import io
@@ -9,10 +9,21 @@ app = Flask(__name__)
 CORS(app)  # Habilita o CORS para todas as rotas
 
 # Configurações do MongoDB
-client = MongoClient("mongodb+srv://rodrigosrj:E38gsdWFxh18bBsT@cluster0.twhtu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-db = client["meu_banco_de_dados"]
-collection = db["minha_colecao"]
-fs = gridfs.GridFS(db)
+def get_mongo_client():
+    try:
+        client = MongoClient("mongodb+srv://rodrigosrj:E38gsdWFxh18bBsT@cluster0.twhtu.mongodb.net/?retryWrites=true&w=majority&ssl=true&appName=Cluster0")
+        return client
+    except errors.ConnectionError as e:
+        print("Erro de conexão com o MongoDB:", e)
+        return None
+
+client = get_mongo_client()
+if client:
+    db = client["meu_banco_de_dados"]
+    collection = db["minha_colecao"]
+    fs = gridfs.GridFS(db)
+else:
+    print("Não foi possível conectar ao MongoDB.")
 
 # Função para salvar mídia no GridFS
 def salvar_midia(midia):
@@ -23,7 +34,7 @@ def salvar_midia(midia):
 
 @app.route('/',)
 def index():
-        return "Hello, World!"
+    return "Hello, World!"
 
 # Criar um novo documento (Create)
 @app.route('/create', methods=['POST'])
@@ -98,7 +109,6 @@ def deletar_item(item_id):
         return jsonify({"error": "Item não encontrado"}), 404
 
     return jsonify({"message": "Item deletado com sucesso"}), 200
-
 
 if __name__ == '__main__':
     app.run(debug=False)
