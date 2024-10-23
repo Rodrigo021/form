@@ -21,6 +21,9 @@ def salvar_midia(midia):
         return str(file_id)
     return None
 
+@app.route('/',)
+def index():
+        return "Hello, World!"
 
 # Criar um novo documento (Create)
 @app.route('/create', methods=['POST'])
