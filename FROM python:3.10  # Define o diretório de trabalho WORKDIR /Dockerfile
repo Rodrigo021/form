@@ -1,4 +1,3 @@
-# Use a imagem base do Python
 FROM python:3.10
 
 # Define o diretório de trabalho
@@ -16,8 +15,5 @@ COPY . .
 # Expõe a porta que a aplicação Flask irá rodar
 EXPOSE 5000
 
-# Define a variável de ambiente para rodar o Flask
-ENV FLASK_APP=app.py
-
 # Comando para rodar a aplicação
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
